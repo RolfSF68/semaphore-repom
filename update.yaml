@@ -1,5 +1,9 @@
-- hosts: 192.168.1.205
-  remote_user: rolf
+---
+- hosts: all
+
+  become: true
   tasks:
-    - name: Test connection
-      ping:
+    - name: update apt packages
+      apt:
+        upgrade: yes
+        update_cache: yes
