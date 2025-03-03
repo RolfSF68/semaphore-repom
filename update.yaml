@@ -1,14 +1,9 @@
 ---
-- name: updateles
+- name: nano installalasa a gepeimre
   hosts: gepeim
   tasks:
-    - name: Update APT package cache
+    - name: nano installalasa
       apt:
-        update_cache: yes
-
-    - name: Upgrade all packages
-      apt:
-        upgrade: dist
-        autoremove: yes
-        autoclean: yes
+        name: nano
+        state: latest
 
