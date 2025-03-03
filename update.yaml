@@ -1,1 +1,14 @@
+---
+- name: updateles
+  hosts: gepeim
+  tasks:
+    - name: Update APT package cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
 
