@@ -1,5 +1,5 @@
 - name: Distribute SSH Key to VMs
-  hosts: proxmox_vms
+  hosts: gepeim
   become: true  # Needed if creating users or modifying root-owned files
   tasks:
     - name: Ensure the .ssh directory exists
