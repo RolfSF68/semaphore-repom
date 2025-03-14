@@ -1,6 +1,6 @@
 - name: Distribute SSH Key and Add Fingerprints to Known Hosts
-  hosts: gepeim  # Define your group or set of target machines
-  become: true  # Necessary if you're modifying root-owned files
+  hosts: gepeim  # Your group of hosts
+  become: true  # If you're modifying root-owned files
   tasks:
     - name: Ensure the .ssh directory exists for the user
       file:
@@ -14,14 +14,14 @@
       authorized_key:
         user: "{{ ansible_user }}"
         state: present
-        key: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_ed25519.pub') }}"  # Use the key from the control node
+        key: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_ed25519.pub') }}"  # The public key from the control machine
 
-    - name: Add the fingerprint of the remote host to known_hosts for the user
+    - name: Add the fingerprint of the remote host to known_hosts
       known_hosts:
         name: "{{ inventory_hostname }}"
         path: "/home/{{ ansible_user }}/.ssh/known_hosts"
         state: present
-        key: "{{ lookup('pipe', 'ssh-keyscan -t ed25519 ' + inventory_hostname) }}"  # Get the host fingerprint
+        key: "{{ lookup('pipe', 'ssh-keyscan -t ed25519 ' + inventory_hostname) }}"  # Fetch the fingerprint
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: '0644'
