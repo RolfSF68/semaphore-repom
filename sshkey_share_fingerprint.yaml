@@ -14,7 +14,7 @@
       authorized_key:
         user: "{{ ansible_user }}"
         state: present
-        key: "{{ lookup('file', '/home/ansiblerolf/.ssh/id_ed25519.pub') }}"
+        key: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_ed25519.pub') }}"  # Dynamically use the home directory
 
     - name: Ensure correct permissions on authorized_keys
       file:
