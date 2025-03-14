@@ -1,4 +1,4 @@
-- name: Distribute SSH Key to VMs
+- name: Distribute SSH Key and Add Fingerprints to Known Hosts
   hosts: gepeim
   become: true  # Needed if creating users or modifying root-owned files
   tasks:
@@ -14,7 +14,17 @@
       authorized_key:
         user: "{{ ansible_user }}"
         state: present
-        key: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_ed25519.pub') }}"  # Dynamically use the home directory
+        key: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_ed25519.pub') }}"  # Using the control machine's public key
+
+    - name: Add the fingerprint of the remote host to known_hosts
+      known_hosts:
+        name: "{{ inventory_hostname }}"
+        path: "/home/{{ ansible_user }}/.ssh/known_hosts"
+        state: present
+        key: "{{ lookup('pipe', 'ssh-keyscan -t ed25519 ' + inventory_hostname) }}"  # Fetch fingerprint for the host
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0644'
 
     - name: Ensure correct permissions on authorized_keys
       file:
